@@ -107,8 +107,8 @@ namespace M2_SC
                         produto.DataHoraCadastro = DateTime.Now;
                         produto.Fornecedor = fornecedor;
                         produto.FornecedorId = fornecedor.Id;
-                    newContext.ChangeTracker.Clear();
-                    newContext.Produtos.Update(produto);
+                        newContext.ChangeTracker.Clear();
+                        newContext.Produtos.Update(produto);
                     }
                     else
                     {
@@ -119,8 +119,8 @@ namespace M2_SC
                         produto.Validade = DateOnly.FromDateTime(validadePicker.Value);
                         produto.Valor = valuePicker.Value;
                         produto.DataHoraCadastro = DateTime.Now;
-                    newContext.ChangeTracker.Clear();
-                    newContext.Produtos.Update(produto);
+                        newContext.ChangeTracker.Clear();
+                        newContext.Produtos.Update(produto);
                     }
 
 
