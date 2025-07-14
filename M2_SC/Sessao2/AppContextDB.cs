@@ -11,12 +11,17 @@ public partial class AppContextDB : DbContext
     {
     }
 
-    public AppContextDB(DbContextOptions<AppContextDB> options)
-        : base(options)
+    private static AppContextDB? contextDB;
+    public static AppContextDB GetAppContextDB()
     {
-        DbContextOptionsBuilder<AppContextDB> optionss = new DbContextOptionsBuilder<AppContextDB>();
-        optionss.EnableSensitiveDataLogging();
+        if (contextDB == null)
+        {
+            contextDB = new AppContextDB();
+        }
+        return contextDB;
     }
+
+    public AppContextDB(DbContextOptions<AppContextDB> options) :base(options){}
 
     public virtual DbSet<Atendimento> Atendimentos { get; set; }
 

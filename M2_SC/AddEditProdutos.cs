@@ -25,7 +25,7 @@ namespace M2_SC
         public AddEditProdutos()
         {
             InitializeComponent();
-            newContext = new AppContextDB();
+            newContext = AppContextDB.GetAppContextDB();
             List<string> strings = new List<string> { "Medicamento", "Equipamento", "Higiene" };
             tipoCb.DataSource = strings;
         }
@@ -64,10 +64,7 @@ namespace M2_SC
         private void CloseTab()
         {
             var list = new List<Produto>();
-            using (var context = new AppContextDB())
-            {
-                list = context.Produtos.Include(p => p.Fornecedor).Include(p => p.ProdutoSolicitacaos).Where(p => p.FornecedorId == fornecedor.Id).ToList();
-            }
+            list = newContext.Produtos.Include(p => p.Fornecedor).Include(p => p.ProdutoSolicitacaos).Where(p => p.FornecedorId == fornecedor.Id).ToList();
             form.SetValues(fornecedor, list);
             form.SetDGV();
             form.Enabled = true;
@@ -110,7 +107,7 @@ namespace M2_SC
                         produto.DataHoraCadastro = DateTime.Now;
                         produto.Fornecedor = fornecedor;
                         produto.FornecedorId = fornecedor.Id;
-                        newContext.Produtos.Add(produto);
+                        newContext.Produtos.Update(produto);
                     }
                     else
                     {
