@@ -16,10 +16,12 @@ namespace M2_SC
     public partial class SolicitacoesForm : UserControl
     {
         private Cliente cliente;
+        private AppContextDB context;
         private List<Solicitacao> solicitacaoList;
         public SolicitacoesForm()
         {
             InitializeComponent();
+            context = AppContextDB.GetAppContextDB();
             List<string> strings = new List<string> { "Medicamento", "Equipamento", "Higiene" };
             tipoCb.DataSource = strings;
         }
@@ -27,8 +29,6 @@ namespace M2_SC
         public void SetValues(Cliente cliente, List<Solicitacao> list)
         {
             this.cliente = cliente;
-            using (var context = new AppContextDB())
-            {
                 foreach (var item in list)
                 {
                     item.ProdutoSolicitacaos = context.ProdutoSolicitacaos
@@ -37,7 +37,6 @@ namespace M2_SC
                         .Where(ps => ps.SolicitcaoId == item.Id)
                         .ToList();
                 }
-            }
             solicitacaoList = list;
         }
 
@@ -55,8 +54,6 @@ namespace M2_SC
             bool pNome = string.IsNullOrEmpty(produtoTxt.Text);
             bool pTipo = string.IsNullOrEmpty(tipoCb.SelectedItem.ToString());
             List<Solicitacao> list = [];
-            using (var context = new AppContextDB())
-            {
                 dgvSolicitacoes.Rows.Clear();
                 if (pNome && pTipo)
                 {
@@ -102,7 +99,6 @@ namespace M2_SC
                         }
                     }
                 }
-            }
         }
 
         private void editBtn_Click(object sender, EventArgs e)
@@ -114,8 +110,6 @@ namespace M2_SC
                 var row = dgvSolicitacoes.SelectedRows[0];
                 List<Produto> produtos = [];
                 Solicitacao solicitacao = new Solicitacao();
-                using (var context = new AppContextDB())
-                {
                     solicitacao = context.Solicitacaos.Include(s => s.Cliente).Include(s => s.ProdutoSolicitacaos).FirstOrDefault(s => s.Id == int.Parse(row.Cells[0].Value.ToString()));
                     foreach (var produto in solicitacao.ProdutoSolicitacaos)
                     {
@@ -124,7 +118,6 @@ namespace M2_SC
                             produtos.Add(p);
                         }
                     }
-                }
                 addEdit.SetFieldsForEdit(solicitacao, produtos, solicitacao.ProdutoSolicitacaos.ElementAt(0).Produto.Tipo, solicitacao.Descricao, solicitacao.Validade);
                 this.Enabled = false;
                 addEdit.Show();

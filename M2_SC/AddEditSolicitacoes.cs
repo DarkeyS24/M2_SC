@@ -20,9 +20,11 @@ namespace M2_SC
         private Solicitacao solicitacao;
         private string type;
         private Cliente cliente;
+        private AppContextDB context;
         public AddEditSolicitacoes()
         {
             InitializeComponent();
+            context = AppContextDB.GetAppContextDB();
             List<string> tipos = new List<string> { "Medicamento", "Equipamento", "Higiene" };
             tipoCb.DataSource = tipos;
         }
@@ -63,7 +65,7 @@ namespace M2_SC
         {
             this.Close();
             List<Solicitacao> list = [];
-            using (var context = new AppContextDB()) { list = context.Solicitacaos.Include(s => s.ProdutoSolicitacaos).Where(s => s.ClienteId == cliente.Id).ToList(); }
+            list = context.Solicitacaos.Include(s => s.ProdutoSolicitacaos).Where(s => s.ClienteId == cliente.Id).ToList();
             form.SetValues(cliente, list);
             form.SetDGV();
             this.form.Enabled = true;
@@ -73,8 +75,6 @@ namespace M2_SC
         {
             if (CheckSolicitation())
             {
-                using (var context = new AppContextDB())
-                {
                     if (action == 1)
                     {
                         if (string.IsNullOrEmpty(descTxt.Text))
@@ -177,10 +177,9 @@ namespace M2_SC
                             MessageBox.Show("Solicitação atualizada com sucesso!");
                         }
                     }
-                }
                 form.Enabled = true;
                 var list = new List<Solicitacao>();
-                using (var context = new AppContextDB()) { list = context.Solicitacaos.Include(s => s.ProdutoSolicitacaos).Where(s => s.ClienteId == cliente.Id).ToList(); }
+                list = context.Solicitacaos.Include(s => s.ProdutoSolicitacaos).Where(s => s.ClienteId == cliente.Id).ToList();
                 form.SetValues(cliente, list);
                 form.SetDGV();
                 this.Close();
@@ -194,8 +193,6 @@ namespace M2_SC
         private void searchBtn_Click(object sender, EventArgs e)
         {
             var list = new List<Produto>();
-            using (var context = new AppContextDB())
-            {
                 if (string.IsNullOrEmpty(nomeTxt.Text))
                 {
                     list = context.Produtos.Include(p => p.Fornecedor).Include(p => p.ProdutoSolicitacaos).Where(p => p.Tipo == tipoCb.SelectedItem.ToString()).ToList();
@@ -221,13 +218,10 @@ namespace M2_SC
                         }
                     }
                 }
-            }
         }
 
         private bool CheckSolicitation()
         {
-            using (var context = new AppContextDB())
-            {
                 var rows = dgvSolicitados.Rows;
                 List<bool> list = [];
                 foreach (DataGridViewRow row in rows)
@@ -245,13 +239,10 @@ namespace M2_SC
                     }
                 }
                 return list.Any(l => l == true);
-            }
         }
 
         private void addBtn_Click(object sender, EventArgs e)
         {
-            using (var context = new AppContextDB())
-            {
                 if (dgvPesquisados.SelectedRows.Count > 0)
                 {
                     var row = dgvPesquisados.SelectedRows[0];
@@ -285,7 +276,6 @@ namespace M2_SC
                 {
                     MessageBox.Show("Por favor, selecione um produto da lista.");
                 }
-            }
         }
 
         private void dgvSolicitados_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -304,8 +294,6 @@ namespace M2_SC
         {
             var rows = dgvSolicitados.Rows;
             var value = 0;
-            using (var context = new AppContextDB())
-            {
                 foreach (DataGridViewRow item in rows)
                 {
                     if (!item.IsNewRow)
@@ -317,7 +305,6 @@ namespace M2_SC
                         }
                     }
                 }
-            }
             valueLbl.Text = $"{value}";
         }
     }

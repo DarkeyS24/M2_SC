@@ -17,17 +17,17 @@ namespace M2_SC
     {
         private Fornecedor fornecedor;
         private List<Produto> produtosList;
+        private AppContextDB context;
 
         public ProdutosForm()
         {
             InitializeComponent();
+            context = AppContextDB.GetAppContextDB();
         }
 
         public void SetValues(Fornecedor fornecedor, List<Produto> list)
         {
             this.fornecedor = fornecedor;
-            using (var context = new AppContextDB())
-            {
                 foreach (var item in list)
                 {
                     item.ProdutoSolicitacaos = context.ProdutoSolicitacaos
@@ -36,7 +36,6 @@ namespace M2_SC
                         .Where(ps => ps.ProdutoId == item.Id)
                         .ToList();
                 }
-            }
             produtosList = list;
         }
 
@@ -63,9 +62,7 @@ namespace M2_SC
             if (dgvProdutos.SelectedRows.Count > 0)
             {
                 var row = dgvProdutos.SelectedRows[0];
-                using (var context = new AppContextDB())
-                {
-                    Produto? produto = context.Produtos.FirstOrDefault(p =>
+                    Produto? produto = context.Produtos.AsNoTracking().FirstOrDefault(p =>
                     p.Nome == row.Cells[0].Value.ToString() &&
                     p.Tipo == row.Cells[1].Value.ToString() &&
                     p.Fornecedor.RazaoSocial == fornecedor.RazaoSocial);
@@ -74,7 +71,6 @@ namespace M2_SC
                         addEdit.SetEditFields(produto);
                     }
                     addEdit.Show();
-                }
             }
         }
     }

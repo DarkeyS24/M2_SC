@@ -6,6 +6,8 @@ namespace M2_SC
     public partial class CadastroForm : Form
     {
         private Form1 form;
+        private AppContextDB context;
+
         public CadastroForm()
         {
             InitializeComponent();
@@ -32,8 +34,6 @@ namespace M2_SC
         {
             if (!IsFieldEmpty())
             {
-                using (var context = new AppContextDB())
-                {
                     long CNPJ, CPF, tel;
                     if (perfilCb.SelectedItem.ToString() == "Fornecedor")
                     {
@@ -145,7 +145,6 @@ namespace M2_SC
                             MessageBox.Show("CPF Invalido, só são permitidos numeros");
                         }
                     }
-                }
             }
         }
 

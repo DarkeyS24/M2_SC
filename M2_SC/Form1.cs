@@ -5,9 +5,11 @@ namespace M2_SC
 {
     public partial class Form1 : Form
     {
+        private AppContextDB context;
         public Form1()
         {
             InitializeComponent();
+            context = AppContextDB.GetAppContextDB();
         }
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -38,8 +40,6 @@ namespace M2_SC
             }
             else
             {
-                using (var context = new AppContextDB())
-                {
                     var user = context.Usuarios.FirstOrDefault(u => u.Login == userTxt.Text && u.SenhaHash == pswdTxt.Text);
                     if (user != null)
                     {
@@ -70,7 +70,6 @@ namespace M2_SC
                         pswdTxt.Clear();
                         userTxt.Focus();
                     }
-                }
             }
         }
 

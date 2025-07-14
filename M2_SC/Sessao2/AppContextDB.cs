@@ -7,9 +7,7 @@ namespace M2_SC.Sessao2;
 
 public partial class AppContextDB : DbContext
 {
-    public AppContextDB()
-    {
-    }
+    public AppContextDB(){}
 
     private static AppContextDB? contextDB;
     public static AppContextDB GetAppContextDB()
@@ -51,7 +49,6 @@ public partial class AppContextDB : DbContext
     #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
     {
         optionsBuilder.UseSqlServer("Server=localhost;Database=Sessao2;User Id=sa;Password=sql;TrustServerCertificate=true;");
-        optionsBuilder.EnableSensitiveDataLogging();
     }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

@@ -64,7 +64,7 @@ namespace M2_SC
         private void CloseTab()
         {
             var list = new List<Produto>();
-            list = newContext.Produtos.Include(p => p.Fornecedor).Include(p => p.ProdutoSolicitacaos).Where(p => p.FornecedorId == fornecedor.Id).ToList();
+            list = newContext.Produtos.Include(p => p.Fornecedor).Include(p => p.ProdutoSolicitacaos).Where(p => p.FornecedorId == fornecedor.Id).AsNoTracking().ToList();
             form.SetValues(fornecedor, list);
             form.SetDGV();
             form.Enabled = true;
@@ -107,7 +107,8 @@ namespace M2_SC
                         produto.DataHoraCadastro = DateTime.Now;
                         produto.Fornecedor = fornecedor;
                         produto.FornecedorId = fornecedor.Id;
-                        newContext.Produtos.Update(produto);
+                    newContext.ChangeTracker.Clear();
+                    newContext.Produtos.Update(produto);
                     }
                     else
                     {
@@ -118,7 +119,8 @@ namespace M2_SC
                         produto.Validade = DateOnly.FromDateTime(validadePicker.Value);
                         produto.Valor = valuePicker.Value;
                         produto.DataHoraCadastro = DateTime.Now;
-                        newContext.Produtos.Update(produto);
+                    newContext.ChangeTracker.Clear();
+                    newContext.Produtos.Update(produto);
                     }
 
 
