@@ -256,7 +256,10 @@ namespace M2_SC
                 {
                     var row = dgvPesquisados.SelectedRows[0];
                     var produto = context.Produtos.Include(p => p.Fornecedor).FirstOrDefault(p => p.Nome == row.Cells[0].Value.ToString() && p.Fornecedor.RazaoSocial == row.Cells[1].Value.ToString());
-                    Image image = Image.FromFile(@"C:\Users\angel_mata\source\repos\M2_SC\M2_SC\Images\PNG\16px\173-bin.png");
+                    var relativePath = @"Images\PNG\16px\173-bin.png";
+                    var basePath = AppDomain.CurrentDomain.BaseDirectory;
+                    var fullPath = Path.Combine(basePath, relativePath);
+                    Image image = Image.FromFile(fullPath);
                     if (!CheckSolicitation())
                     {
                         dgvSolicitados.Rows.Add(produto.Nome, produto.Fornecedor.RazaoSocial, image);

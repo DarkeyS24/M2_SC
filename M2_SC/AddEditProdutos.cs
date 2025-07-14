@@ -20,10 +20,12 @@ namespace M2_SC
         private Produto produto;
         private string type;
         private Fornecedor fornecedor;
+        private AppContextDB newContext;
 
         public AddEditProdutos()
         {
             InitializeComponent();
+            newContext = new AppContextDB();
             List<string> strings = new List<string> { "Medicamento", "Equipamento", "Higiene" };
             tipoCb.DataSource = strings;
         }
@@ -74,8 +76,6 @@ namespace M2_SC
 
         private void saveBtn_Click(object sender, EventArgs e)
         {
-            using (var context = new AppContextDB())
-            {
                 if (string.IsNullOrEmpty(descTxt.Text))
                 {
                     MessageBox.Show("Defina a descrição");
@@ -110,7 +110,7 @@ namespace M2_SC
                         produto.DataHoraCadastro = DateTime.Now;
                         produto.Fornecedor = fornecedor;
                         produto.FornecedorId = fornecedor.Id;
-                        context.Produtos.Add(produto);
+                        newContext.Produtos.Add(produto);
                     }
                     else
                     {
@@ -121,18 +121,17 @@ namespace M2_SC
                         produto.Validade = DateOnly.FromDateTime(validadePicker.Value);
                         produto.Valor = valuePicker.Value;
                         produto.DataHoraCadastro = DateTime.Now;
-                        context.Produtos.Update(produto);
+                        newContext.Produtos.Update(produto);
                     }
 
-               
-                    context.SaveChanges();
+
+                    newContext.SaveChanges();
                     MessageBox.Show(action == 1 ? "Produto adicionado com sucesso!" : "Produto atualizado com sucesso!");
                 }
                 catch (Exception ex)
                 {
                     MessageBox.Show($"Erro ao {(action == 1 ? "adicionar" : "atualizar")} produto: {ex.Message}");
                 }
-            }
             CloseTab();
         }
     }

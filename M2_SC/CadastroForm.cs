@@ -34,12 +34,21 @@ namespace M2_SC
             {
                 using (var context = new AppContextDB())
                 {
-                    long CNPJ, CPF;
+                    long CNPJ, CPF, tel;
                     if (perfilCb.SelectedItem.ToString() == "Fornecedor")
                     {
                         try
                         {
                             CNPJ = long.Parse(documentoTxt.Text);
+                            try
+                            {
+                                tel = long.Parse(telTxt.Text);
+                            }
+                            catch (Exception ex)
+                            {
+                                MessageBox.Show("Telefone Invalido, só são permitidos numeros");
+                                return;
+                            }
                             var fornecedor = context.Fornecedors.FirstOrDefault(f => f.Cnpj == documentoTxt.Text);
                             if (fornecedor != null)
                             {
@@ -79,7 +88,7 @@ namespace M2_SC
                         }
                         catch (Exception ex)
                         {
-                            MessageBox.Show("CNPJ Invalido só são permitidos numeros");
+                            MessageBox.Show("CNPJ Invalido, só são permitidos numeros");
                         }
                     }
                     else
@@ -87,6 +96,15 @@ namespace M2_SC
                         try
                         {
                             CPF = long.Parse(documentoTxt.Text);
+                            try
+                            {
+                                tel = long.Parse(telTxt.Text);
+                            }
+                            catch (Exception ex)
+                            {
+                                MessageBox.Show("Telefone Invalido, só são permitidos numeros");
+                                return;
+                            }
                             var cliente = context.Clientes.FirstOrDefault(f => f.Cpf == documentoTxt.Text);
                             if (cliente != null)
                             {
@@ -124,11 +142,23 @@ namespace M2_SC
                         }
                         catch (Exception ex)
                         {
-                            MessageBox.Show("CPF Invalido só são permitidos numeros");
+                            MessageBox.Show("CPF Invalido, só são permitidos numeros");
                         }
                     }
                 }
             }
+        }
+
+        private void ClearFields()
+        {
+            nomeTxt.Clear();
+            socialTxt.Clear();
+            documentoTxt.Clear();
+            telTxt.Clear();
+            userTxt.Clear();
+            pswdTxt.Clear();
+            rePswdTxt.Clear();
+            nascPicker.Value = DateTime.Now;
         }
 
         private bool IsFieldEmpty()
@@ -243,6 +273,7 @@ namespace M2_SC
         {
             if (perfilCb.SelectedIndex == 0)
             {
+                ClearFields();
                 cpfLbl.Visible = true;
                 cnpjLbl.Visible = false;
 
@@ -253,6 +284,7 @@ namespace M2_SC
             }
             else
             {
+                ClearFields();
                 cpfLbl.Visible = false;
                 cnpjLbl.Visible = true;
 

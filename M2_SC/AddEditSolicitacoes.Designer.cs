@@ -283,6 +283,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             AutoScroll = true;
             ClientSize = new Size(653, 552);
+            ControlBox = false;
             Controls.Add(cancelBtn);
             Controls.Add(saveBtn);
             Controls.Add(lbl);
